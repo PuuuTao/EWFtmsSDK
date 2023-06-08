@@ -1,0 +1,388 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.8.1 (swiftlang-5.8.0.124.5 clang-1403.0.22.11.100)
+// swift-module-flags: -target arm64-apple-ios14.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name EWFtmsSDK
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import Combine
+import CoreBluetooth
+@_exported import EWFtmsSDK
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+public protocol Disposable {
+  func dispose()
+}
+@_hasMissingDesignatedInitializers public class Subject<T> {
+  public var value: T {
+    get
+    set
+  }
+  public var isObserved: Swift.Bool {
+    get
+  }
+  @objc deinit
+  public func attach(observer: @escaping (T) -> Swift.Void) -> any EWFtmsSDK.Disposable
+  public func attach(observer: @escaping (T) -> Swift.Void, updateOnMainThread: Swift.Bool) -> any EWFtmsSDK.Disposable
+  public func notify()
+}
+@_hasMissingDesignatedInitializers public class Fields {
+  public static var UINT8: Swift.Int
+  public static var UINT16: Swift.Int
+  public static var UINT32: Swift.Int
+  public static var SINT16: Swift.Int
+  public func flag(_ bit: Swift.Int) -> Swift.Bool
+  public func get<T>(_ format: Swift.Int) -> T
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class EWFTMSManager : ObjectiveC.NSObject, Combine.ObservableObject {
+  public static let sharedInstance: EWFtmsSDK.EWFTMSManager
+  public static var deviceArr: [CoreBluetooth.CBPeripheral]
+  public static var bluetoothState: EWFtmsSDK.Subject<EWFtmsSDK.EWFTMSManager.bluetoothStateType>
+  public static var newDevice: EWFtmsSDK.Subject<CoreBluetooth.CBPeripheral?>
+  public static func scanForFTMS()
+  public static func stopScanningForFTMS()
+  public static func connectPeripheral(peripheral: CoreBluetooth.CBPeripheral)
+  public static func disConnectPeripheral()
+  public static var isDiscover: EWFtmsSDK.Subject<Swift.Bool>
+  public static var rowerData: EWFtmsSDK.Subject<EWFtmsSDK.RowerData> {
+    get
+  }
+  public static var treadmillData: EWFtmsSDK.Subject<EWFtmsSDK.TreadmillData> {
+    get
+  }
+  public static var crossTrainerData: EWFtmsSDK.Subject<EWFtmsSDK.CrossTrainerData> {
+    get
+  }
+  public static var indoorBikeData: EWFtmsSDK.Subject<EWFtmsSDK.IndoorBikeData> {
+    get
+  }
+  public static var ftmsFeature: EWFtmsSDK.Subject<EWFtmsSDK.FTMFeature> {
+    get
+  }
+  public static var targetSettingFeature: EWFtmsSDK.Subject<EWFtmsSDK.TargetSettingFeature> {
+    get
+  }
+  public static var trainingStatus: EWFtmsSDK.Subject<EWFtmsSDK.TrainingStatus> {
+    get
+  }
+  public static var ftmsMachineStatus: EWFtmsSDK.Subject<EWFtmsSDK.FTMSMachineStatus> {
+    get
+  }
+  public static var machineControlResponse: EWFtmsSDK.Subject<EWFtmsSDK.MachineControlResponse> {
+    get
+  }
+  public static var deviceData: EWFtmsSDK.Subject<Foundation.NSData> {
+    get
+  }
+  public var device: CoreBluetooth.CBPeripheral?
+  public var deviceType: EWFtmsSDK.EWFTMSManager.DeviceType
+  public var controlPointCharacteristic: CoreBluetooth.CBCharacteristic?
+  public var speedRange: EWFtmsSDK.SupportSpeedRange
+  public var inclinationRange: EWFtmsSDK.SupportInclinationRange
+  public var resistanceLevelRange: EWFtmsSDK.SupportResistanceLevelRange
+  public var heartRateRange: EWFtmsSDK.SupportHeartRateRange
+  public var powerRange: EWFtmsSDK.SupportPowerRange
+  public enum DeviceType {
+    case Treadmill
+    case Rower
+    case CrossTrainer
+    case IndoorBike
+    case unknown
+    public static func == (a: EWFtmsSDK.EWFTMSManager.DeviceType, b: EWFtmsSDK.EWFTMSManager.DeviceType) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum bluetoothStateType {
+    case unknown
+    case resetting
+    case unsupported
+    case unauthorized
+    case poweredOff
+    case poweredOn
+    case unknownDefault
+    public static func == (a: EWFtmsSDK.EWFTMSManager.bluetoothStateType, b: EWFtmsSDK.EWFTMSManager.bluetoothStateType) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
+  @objc deinit
+}
+public enum FTMSUUID : Swift.String {
+  case serviceFTMS
+  case privateServiceFTMS
+  case characteristicFTMSMachineStatus
+  case characteristicFTMSFeature
+  case characteristicTreadmillData
+  case characteristicCrossTrainerData
+  case characteristicRowerData
+  case characteristicIndoorBikeData
+  case characteristicTrainingStatus
+  case characteristicSupportSpeedRange
+  case characteristicInclinationRange
+  case characteristicResistanceLevelRange
+  case characteristicHeartRateRange
+  case characteristicPowerRange
+  case characteristicFTMSControlPoint
+  case privateDataCharacteristic
+  case privateWriteCharacteristic
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum FitnessMachineControlCode : Swift.UInt8 {
+  case reqeustControl
+  case reset
+  case setTargetSpeed
+  case setTargetInclination
+  case setTargetResistanceLevel
+  case setTargetPower
+  case setTargetHeartRate
+  case startResume
+  case stopPause
+  case setTargetedExpendedEnergy
+  case setTargetedNumberOfSteps
+  case setTargetedNumberOfStrides
+  case setTargetedDistance
+  case setTargetedTrainingTime
+  case setTargetedTimeInTwoHrZone
+  case setTargetedTimeInThreeHrZone
+  case setTargetedTimeInFiveHrZone
+  case setIndoorBikeSimulationParameters
+  case setWheelCircumference
+  case setSpinDownControl
+  case setTargetedCadence
+  case responseCode
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum FitnessMachineStopPauseType : Swift.UInt8 {
+  case reserved
+  case stop
+  case pause
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum FitnessDownControl : Swift.UInt8 {
+  case start
+  case ignore
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public func controlFTMS(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, code: EWFtmsSDK.FitnessMachineControlCode, target: EWFtmsSDK.FitnessMachineStopPauseType? = nil)
+public func controlFTMSSpeed(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetSpeed: Swift.Double = 1.0)
+public func controlFTMSInclination(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetInclination: Swift.Double = 0)
+public func controlFTMSResistance(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetResistance: Swift.Int = 1)
+public func controlFTMSPower(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetPower: Swift.Int)
+public func controlFTMSHeartRate(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetHeartRate: Swift.Int)
+public func controlFTMSExpendedEnergy(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetEnergy: Swift.Int)
+public func controlFTMSSteps(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetSteps: Swift.Int)
+public func controlFTMSStrides(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetStrides: Swift.Int)
+public func controlFTMSDistance(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetDistance: Swift.Int)
+public func controlFTMSTrainingTime(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetTrainingTime: Swift.Int)
+public func controlFTMSTimeInTwoHrZone(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetFatBurnZoneTime: Swift.Int, targetFitnessZoneTime: Swift.Int)
+public func controlFTMSTimeInThreeHrZone(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetLightZoneTime: Swift.Int, targetModerateZoneTime: Swift.Int, targetHardZoneTime: Swift.Int)
+public func controlFTMSTimeInFiveHrZone(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetVeryLightZoneTime: Swift.Int, targetLightZoneTime: Swift.Int, targetModerateZoneTime: Swift.Int, targetHardZoneTime: Swift.Int, targetMaximumZoneTime: Swift.Int)
+public func controlFTMSIndoorBikeSimulation(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, windSpeed: Swift.Double, grade: Swift.Double, crr: Swift.Double, cw: Swift.Double)
+public func controlFTMSWheelCircumference(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetWheelCircumference: Swift.Double)
+public func controlFTMSDownControl(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, control: EWFtmsSDK.FitnessDownControl)
+public func controlFTMSCadence(characteristic: CoreBluetooth.CBCharacteristic, device: CoreBluetooth.CBPeripheral, targetCadence: Swift.Int)
+public func controlFTMSStopDevice()
+public func checkMachineControlRequestCode(code: Swift.UInt8) -> Swift.String
+public func checkMachineControlResultCode(code: Swift.UInt8) -> Swift.String
+public struct RowerData {
+  public var strokeRate: Swift.UInt8
+  public var strokeCount: Swift.UInt16
+  public var averageStrokeRate: Swift.UInt8
+  public var totalDistance: Swift.UInt32
+  public var instantaneousPace: Swift.UInt16
+  public var averagePace: Swift.UInt16?
+  public var instantaneousPower: Swift.Int16?
+  public var averagePower: Swift.Int16
+  public var resistanceLevel: Swift.Int16?
+  public var totalEnergy: Swift.UInt16
+  public var energyPerHour: Swift.UInt16
+  public var energyPerMinute: Swift.UInt8
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivilent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16
+  public var remainingTime: Swift.UInt16?
+}
+public struct TreadmillData {
+  public var instantaneousSpeed: Swift.UInt16
+  public var averageSpeed: Swift.UInt16?
+  public var totalDistance: Swift.UInt32
+  public var inclination: Swift.Int16?
+  public var rampAngleSetting: Swift.Int16?
+  public var positiveElevationGain: Swift.UInt16?
+  public var negativeElevationGain: Swift.UInt16?
+  public var instantaneousPace: Swift.UInt8?
+  public var averagePace: Swift.UInt8?
+  public var totalEnergy: Swift.UInt16
+  public var energyPerHour: Swift.UInt16
+  public var energyPerMinute: Swift.UInt8
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivilent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16
+  public var remainingTime: Swift.UInt16?
+  public var forceonBelt: Swift.Int16?
+  public var powerOutput: Swift.Int16?
+}
+public struct CrossTrainerData {
+  public var instantaneousSpeed: Swift.UInt16
+  public var averageSpeed: Swift.UInt16?
+  public var totalDistance: Swift.UInt32
+  public var stepPerMinute: Swift.UInt16?
+  public var averageStep: Swift.UInt16?
+  public var strideCount: Swift.UInt16
+  public var positiveElevationGain: Swift.UInt16?
+  public var negativeElevationGain: Swift.UInt16?
+  public var inclination: Swift.Int16?
+  public var rampAngleSetting: Swift.Int16?
+  public var resistanceLevel: Swift.Int16
+  public var instantaneousPower: Swift.UInt16
+  public var averagePower: Swift.Int16
+  public var totalEnergy: Swift.UInt16
+  public var energyPerHour: Swift.UInt16
+  public var energyPerMinute: Swift.UInt8
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivilent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16
+  public var remainingTime: Swift.UInt16?
+  public var direction: Swift.UInt16?
+}
+@_hasMissingDesignatedInitializers public class IndoorBikeData {
+  public var instantaneousSpeed: Swift.UInt16
+  public var averageSpeed: Swift.UInt16?
+  public var instantaneousCadence: Swift.UInt16
+  public var averageCadence: Swift.UInt16?
+  public var totalDistance: Swift.UInt32
+  public var resistanceLevel: Swift.Int16
+  public var instantaneousPower: Swift.Int16
+  public var averagePower: Swift.Int16
+  public var totalEnergy: Swift.UInt16
+  public var energyPerHour: Swift.UInt16
+  public var energyPerMinute: Swift.UInt8
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivilent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16
+  public var remainingTime: Swift.UInt16?
+  @objc deinit
+}
+public struct FTMFeature {
+  public var averageSpeedSupported: Swift.Int
+  public var cadenceSupported: Swift.Int
+  public var totalDistanceSupported: Swift.Int
+  public var inclinationSupported: Swift.Int
+  public var elevationGainSupported: Swift.Int
+  public var paceSupported: Swift.Int
+  public var stepCountSupported: Swift.Int
+  public var resistanceLevelSupported: Swift.Int
+  public var strideCountSupported: Swift.Int
+  public var expendedEnergySupported: Swift.Int
+  public var heartRateMeasurementSupported: Swift.Int
+  public var metabolicEquivalentSupported: Swift.Int
+  public var elapsedTimeSupported: Swift.Int
+  public var remainingTimeSupported: Swift.Int
+  public var powerMeasurementSupported: Swift.Int
+  public var forceOnBeltAndPowerOutputSupported: Swift.Int
+  public var userDataRetentionSupported: Swift.Int
+  public var reservedForFutureUse: Swift.Int
+}
+public struct TargetSettingFeature {
+  public var speedTargetSettingSupported: Swift.Int
+  public var inclinationTargetSettingSupported: Swift.Int
+  public var resistanceTargetSettingSupported: Swift.Int
+  public var powerTargetSettingSupported: Swift.Int
+  public var heartRateTargetSettingSupported: Swift.Int
+  public var targetedExpendedEnergyConfigurationSupported: Swift.Int
+  public var targetedStepNumberConfigurationSupported: Swift.Int
+  public var targetedStrideNumberConfigurationSupported: Swift.Int
+  public var targetedDistanceConfigurationSupported: Swift.Int
+  public var targetedTrainingTimeConfigurationSupported: Swift.Int
+  public var targetedTimeInTwoHeartRateZonesConfigurationSupported: Swift.Int
+  public var targetedTimeInThreeHeartRateZonesConfigurationSupported: Swift.Int
+  public var targetedTimeInFiveHeartRateZonesConfigurationSupported: Swift.Int
+  public var indoorBikeSimulationParametersSupported: Swift.Int
+  public var wheelCircumferenceConfigurationSupported: Swift.Int
+  public var spinDownControlSupported: Swift.Int
+  public var targetedCadenceConfigurationSupported: Swift.Int
+  public var reservedForFutureUse: Swift.Int
+}
+public struct TrainingStatus {
+  public var trainStatusFlag: Swift.Int
+  public var trainStatusCode: Swift.UInt8?
+}
+public struct FTMSMachineStatus {
+  public var opCode: Swift.UInt8
+  public var parameter: Swift.Int?
+  public var zone1: Swift.UInt16?
+  public var zone2: Swift.UInt16?
+  public var zone3: Swift.UInt16?
+  public var zone4: Swift.UInt16?
+  public var zone5: Swift.UInt16?
+  public var windSpeed: Swift.Int16?
+  public var grade: Swift.Int16?
+  public var crr: Swift.UInt8?
+  public var cw: Swift.UInt8?
+}
+public struct SupportSpeedRange {
+  public var minSpeed: Swift.UInt16
+  public var maxSpeed: Swift.UInt16
+  public var minIncrement: Swift.UInt16
+}
+public struct SupportInclinationRange {
+  public var minInclination: Swift.Int16
+  public var maxInclination: Swift.Int16
+  public var minIncrement: Swift.UInt16
+}
+public struct SupportResistanceLevelRange {
+  public var minResistance: Swift.Int16
+  public var maxResistance: Swift.Int16
+  public var minIncrement: Swift.UInt16
+}
+public struct SupportHeartRateRange {
+  public var minHeartRate: Swift.UInt8
+  public var maxHeartRate: Swift.UInt8
+  public var minIncrement: Swift.UInt8
+}
+public struct SupportPowerRange {
+  public var minPower: Swift.Int16
+  public var maxPower: Swift.Int16
+  public var minIncrement: Swift.UInt16
+}
+public struct MachineControlResponse {
+  public var responseCode: Swift.UInt8
+  public var requestCode: Swift.UInt8
+  public var resultCode: Swift.UInt8
+}
+extension EWFtmsSDK.EWFTMSManager.DeviceType : Swift.Equatable {}
+extension EWFtmsSDK.EWFTMSManager.DeviceType : Swift.Hashable {}
+extension EWFtmsSDK.EWFTMSManager.bluetoothStateType : Swift.Equatable {}
+extension EWFtmsSDK.EWFTMSManager.bluetoothStateType : Swift.Hashable {}
+extension EWFtmsSDK.FTMSUUID : Swift.Equatable {}
+extension EWFtmsSDK.FTMSUUID : Swift.Hashable {}
+extension EWFtmsSDK.FTMSUUID : Swift.RawRepresentable {}
+extension EWFtmsSDK.FitnessMachineControlCode : Swift.Equatable {}
+extension EWFtmsSDK.FitnessMachineControlCode : Swift.Hashable {}
+extension EWFtmsSDK.FitnessMachineControlCode : Swift.RawRepresentable {}
+extension EWFtmsSDK.FitnessMachineStopPauseType : Swift.Equatable {}
+extension EWFtmsSDK.FitnessMachineStopPauseType : Swift.Hashable {}
+extension EWFtmsSDK.FitnessMachineStopPauseType : Swift.RawRepresentable {}
+extension EWFtmsSDK.FitnessDownControl : Swift.Equatable {}
+extension EWFtmsSDK.FitnessDownControl : Swift.Hashable {}
+extension EWFtmsSDK.FitnessDownControl : Swift.RawRepresentable {}

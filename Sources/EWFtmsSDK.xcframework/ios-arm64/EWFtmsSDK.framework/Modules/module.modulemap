@@ -1,0 +1,11 @@
+framework module EWFtmsSDK {
+  umbrella header "EWFtmsSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module EWFtmsSDK.Swift {
+  header "EWFtmsSDK-Swift.h"
+  requires objc
+}
